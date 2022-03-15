@@ -46,50 +46,29 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-
-    # Gets the download URL associated with the $DETEKT_RELEASE_TAG
-    - name: Get Detekt download URL
-      id: detekt_info
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        gh api graphql --field tagName=$DETEKT_RELEASE_TAG --raw-field query='
-          query getReleaseAssetDownloadUrl($tagName: String!) {
-            repository(name: "detekt", owner: "detekt") {
-              release(tagName: $tagName) {
-                releaseAssets(name: "detekt", first: 1) {
-                  nodes {
-                    downloadUrl
-                  }
-                }
-                tagCommit {
-                  oid
-                }
-              }
-            }
-          }
-        ' 1> gh_response.json
-        
-        DETEKT_DOWNLOAD_URL=$(jq --raw-output '.data.repository.release.releaseAssets.nodes[0].downloadUrl' gh_response.json)
-        echo "::set-output name=download_url::$DETEKT_DOWNLOAD_URL"
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'temurin'
 
     # Sets up the detekt cli
     - name: Setup Detekt
       run: |
         dest=$( mktemp -d )
+        DETEKT_FILE=$dest/detekt-cli-all.jar
         curl --request GET \
-          --url ${{ steps.detekt_info.outputs.download_url }} \
+          --url https://github.com/detekt/detekt/releases/download/v1.19.0/detekt-cli-1.19.0-all.jar \
           --silent \
           --location \
-          --output $dest/detekt
-        chmod a+x $dest/detekt
-        echo $dest >> $GITHUB_PATH
+          --output $DETEKT_FILE
+        echo "::set-output name=detekt_file::$DETEKT_FILE"
 
     # Performs static analysis using Detekt
     - name: Run Detekt
       continue-on-error: true
       run: |
-        detekt --input ${{ github.workspace }} --report sarif:${{ github.workspace }}/detekt.sarif.json
+        java -jar ${{ steps.detekt_info.outputs.download_url }} --input ${{ github.workspace }} --report sarif:${{ github.workspace }}/detekt.sarif.json
 
     # Modifies the SARIF output produced by Detekt so that absolute URIs are relative
     # This is so we can easily map results onto their source files
