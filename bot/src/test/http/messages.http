@@ -1,0 +1,2 @@
+### GET /messages
+GET http://localhost:6170/api/v1/messages

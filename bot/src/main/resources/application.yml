@@ -1,0 +1,16 @@
+application:
+  updater:
+    enabled: true
+
+logging:
+  level:
+    root: INFO
+    dev.mbo: TRACE
+    dev:
+      mbo:
+        telegrambot:
+          updater: DEBUG
+
+server:
+  port: 6170
+  shutdown: graceful

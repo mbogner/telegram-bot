@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info:
+  title: not used
+  version: not used
+paths:
+  /api/v1/messages:
+    get:
+      summary: Get all messates
+      operationId: getMessages
+      tags:
+        - Messages
+      security:
+        - BearerAuth:
+            - getMessages
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessagePage"
+        default:
+          description: error schema
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    MessagePage:
+      properties:
+        meta:
+          $ref: '#/components/schemas/ArrayMeta'
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+          default: [ ]
+    Message:
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+          minLength: 1
+          maxLength: 1024
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - text

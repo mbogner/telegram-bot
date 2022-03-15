@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TelegramBotApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="telegram-bot.bot.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="dev.mbo.telegrambot.TelegramBotApplication" />
+    <option name="ENABLE_LAUNCH_OPTIMIZATION" value="false" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

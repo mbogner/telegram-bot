@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "application.updater.enabled",
+      "type": "java.lang.Boolean",
+      "description": "If true the UpdaterWorker is started."
+    }
+  ]
+}
