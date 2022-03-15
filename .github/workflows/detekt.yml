@@ -44,7 +44,8 @@ jobs:
         distribution: 'temurin'
 
     # Sets up the detekt cli
-    - name: Setup Detekt
+    - name: Setup detekt
+      id: setup_detekt
       run: |
         dest=$( mktemp -d )
         DETEKT_FILE=$dest/detekt-cli-all.jar
@@ -54,13 +55,12 @@ jobs:
           --location \
           --output $DETEKT_FILE
         echo "::set-output name=detekt_file::$DETEKT_FILE"
-        ls -lash $DETEKT_FILE
 
     # Performs static analysis using Detekt
     - name: Run Detekt
       continue-on-error: true
       run: |
-        java -jar ${{ steps.detekt_info.outputs.download_url }} --input ${{ github.workspace }} --report sarif:${{ github.workspace }}/detekt.sarif.json
+        java -jar ${{ steps.setup_detekt.outputs.detekt_file }} --input ${{ github.workspace }} --report sarif:${{ github.workspace }}/detekt.sarif.json
 
     # Modifies the SARIF output produced by Detekt so that absolute URIs are relative
     # This is so we can easily map results onto their source files
