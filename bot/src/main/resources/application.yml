@@ -14,3 +14,9 @@ logging:
 server:
   port: 6170
   shutdown: graceful
+
+spring:
+  application:
+    name: telegram-bot
+  main:
+    banner-mode: off

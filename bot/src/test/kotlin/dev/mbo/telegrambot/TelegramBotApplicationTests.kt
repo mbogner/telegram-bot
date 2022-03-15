@@ -16,14 +16,18 @@
 
 package dev.mbo.telegrambot
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class TelegramBotApplicationTests {
+class TelegramBotApplicationTests(
+    private var app: TelegramBotApplication
+) {
 
     @Test
     fun contextLoads() {
+        assertThat(app).isNotNull
     }
 
 }
