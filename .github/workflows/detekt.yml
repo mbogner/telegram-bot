@@ -11,10 +11,6 @@
 # 2. On every Pull Request targeting the default branch
 # 3. On a weekly schedule
 # 4. Manually, on demand, via the "workflow_dispatch" event
-#
-# The workflow should work with no modifications, but you might like to use a
-# later version of the Detekt CLI by modifing the $DETEKT_RELEASE_TAG
-# environment variable.
 name: Scan with Detekt
 
 on:
@@ -28,11 +24,6 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-env:
-  # Release tag associated with version of Detekt to be installed
-  # SARIF support (required for this workflow) was introduced in Detekt v1.15.0
-  DETEKT_RELEASE_TAG: v1.19.0
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -63,6 +54,7 @@ jobs:
           --location \
           --output $DETEKT_FILE
         echo "::set-output name=detekt_file::$DETEKT_FILE"
+        ls -lash $DETEKT_FILE
 
     # Performs static analysis using Detekt
     - name: Run Detekt
