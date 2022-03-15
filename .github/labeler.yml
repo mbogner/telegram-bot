@@ -1,0 +1,28 @@
+legal:
+  - LICENSE.txt
+  - CODE_OF_CONDUCT.md
+  - CONTRIBUTING.md
+docs:
+  - README.md
+  - SECURITY.md
+  - docs/**/*
+projectconfig:
+  - .editorconfig
+  - .github
+  - .run
+  - .gitignore
+  - .foldableview
+gradle-wrapper:
+  - .gradle/**/*
+  - gradlew
+  - gradlew.bat
+gradle:
+  - build.gradle.kts
+  - gradle.properties
+  - settings.gradle.kts
+
+modules: modules/**/*
+modules-common: modules/api/**/*
+modules-common-test: modules/api/**/*
+modules-api: modules/api/**/*
+modules-updater: modules/api/**/*
