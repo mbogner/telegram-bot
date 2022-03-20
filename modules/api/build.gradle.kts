@@ -43,23 +43,25 @@ dependencies {
     testImplementation(project(":common-test"))
 }
 
+val openAPIBasePackage: String by project
+val openAPISpecParts: String by project
+val openAPISpecFilePath: String by project
+val openAPIGenOutBase: String by project
+val openAPISpecFileNamePrefix: String by project
+val openAPISpecFileName = "${openAPISpecFileNamePrefix}${project.name}"
+val openAPISpecFileExt: String by project
+val openAPISpecFile = "$projectDir/$openAPISpecFilePath/$openAPISpecFileName.$openAPISpecFileExt"
+
 sourceSets {
     main {
         java {
-            srcDirs("src/main/kotlin", "${project.buildDir}/generated/source/openapi/src/main/kotlin")
+            srcDirs("src/main/kotlin", "${project.buildDir}/$openAPIGenOutBase/src/main/kotlin")
         }
         resources {
             srcDirs("src/main/resources")
         }
     }
 }
-
-val openAPIBasePackage: String by project
-val openAPISpecParts: String by project
-val openAPISpecFilePath: String by project
-val openAPISpecFileName: String by project
-val openAPISpecFileExt: String by project
-val openAPISpecFile = "$projectDir/$openAPISpecFilePath/$openAPISpecFileName.$openAPISpecFileExt"
 
 val cleanOpenApiFile by tasks.register<Delete>("cleanOpenApiFile") {
     group = "open api merger"
@@ -99,10 +101,10 @@ openApiGenerate {
     // https://openapi-generator.tech/docs/generators/kotlin-spring
     generatorName.set("kotlin-spring")
     library.set("spring-boot")
-    templateDir.set("$projectDir/src/main/openapi/templates")
+    templateDir.set("$projectDir/$openAPISpecFilePath/templates")
 
     inputSpec.set(openAPISpecFile)
-    outputDir.set("$buildDir/generated/source/openapi")
+    outputDir.set("$buildDir/$openAPIGenOutBase")
 
     packageName.set(openAPIBasePackage)
     apiPackage.set("$openAPIBasePackage.api")
@@ -120,7 +122,6 @@ openApiGenerate {
             "Instant" to "java.time.Instant"
         )
     )
-    // https://openapi-generator.tech/docs/generators/kotlin-spring
     configOptions.set(
         mapOf(
             "useBeanValidation" to "true",

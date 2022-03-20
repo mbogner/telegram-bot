@@ -1,0 +1,70 @@
+openapi: 3.0.3
+info:
+  title: telegram bot api
+  description: api to work with the bot
+  license:
+    name: Apache License v2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: v1
+servers:
+  - url: https://api.telegram.org
+    description: dev
+paths:
+  # https://core.telegram.org/bots/api
+  /{token}/getMe:
+    get:
+      tags:
+        - Telegram
+      summary: Get information about the bot
+      operationId: getMe
+      parameters:
+        - $ref: '#/components/schemas/TokenPathRequired'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMeResponseWrapper'
+        default:
+          description: error schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    GetMeResponseWrapper:
+      properties:
+        ok:
+          type: boolean
+        result:
+          $ref: '#/components/schemas/GetMeResponseContent'
+    GetMeResponseContent:
+      properties:
+        id:
+          type: integer
+          format: int64
+        is_bot:
+          type: boolean
+        first_name:
+          type: string
+        username:
+          type: string
+        can_join_groups:
+          type: boolean
+        can_read_all_group_messages:
+          type: boolean
+        supports_inline_queries:
+          type: boolean
+    Error:
+      type: string
+  parameters:
+    TokenPathRequired:
+      name: token
+      in: path
+      description: api token
+      example: bot2223388838:AAsss3DU6Z73jjowo-2pSN22Kw9999KRFB0
+      required: true
+      schema:
+        type: string

@@ -69,14 +69,18 @@ allprojects {
             dependency("io.swagger.core.v3:swagger-annotations:2.1.13")
             // https://mvnrepository.com/artifact/io.swagger/swagger-annotations
             dependency("io.swagger:swagger-annotations:1.6.5")
+            // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
+            dependency("com.google.code.findbugs:jsr305:3.0.2")
+            // https://mvnrepository.com/artifact/org.openapitools/jackson-databind-nullable
+            dependency("org.openapitools:jackson-databind-nullable:0.2.2")
+            // https://mvnrepository.com/artifact/com.github.scribejava/scribejava-core
+            dependency("com.github.scribejava:scribejava-core:8.3.1")
 
             // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
             dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
             // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-reactor
             dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.6.0")
 
-            // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
-            dependency("com.google.code.findbugs:jsr305:3.0.2")
         }
     }
 
@@ -99,4 +103,5 @@ allprojects {
     tasks.withType<Test> {
         useJUnitPlatform()
     }
+
 }

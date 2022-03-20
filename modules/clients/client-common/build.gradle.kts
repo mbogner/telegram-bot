@@ -28,10 +28,20 @@ dependencies {
     api("org.springframework.cloud:spring-cloud-starter-openfeign")
     api("io.github.openfeign:feign-httpclient")
     api("io.github.openfeign:feign-jackson")
+    api("io.github.openfeign:feign-okhttp")
+    api("io.github.openfeign.form:feign-form")
+
     api("com.google.code.findbugs:jsr305")
 
     api("org.springframework.boot:spring-boot-starter-validation")
+
+    api("com.fasterxml.jackson.core:jackson-core")
+    api("com.fasterxml.jackson.core:jackson-annotations")
+    api("com.fasterxml.jackson.core:jackson-databind")
     api("com.fasterxml.jackson.module:jackson-module-kotlin")
+    api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+    api("org.openapitools:jackson-databind-nullable")
+    api("com.github.scribejava:scribejava-core")
 
     api("io.swagger:swagger-annotations")
 

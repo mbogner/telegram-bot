@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-rootProject.name = "telegram-bot"
+package dev.mbo.telegrambot.client.telegram
 
-include("bot")
+import dev.mbo.telegrambot.client.FeignConfig
+import dev.mbo.telegrambot.client.telegram.api.TelegramApi
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 
-include("common")
-project(":common").projectDir = file("modules/common")
+@Configuration
+@Import(FeignConfig::class)
+class TelegramClientConfig {
 
-include("common-test")
-project(":common-test").projectDir = file("modules/common-test")
+    @Bean
+    fun telegramApi(): TelegramApi {
+        TODO("not yet implemented")
+    }
 
-include("client-common")
-project(":client-common").projectDir = file("modules/clients/client-common")
-
-include("client-telegram")
-project(":client-telegram").projectDir = file("modules/clients/telegram")
-
-include("api")
-project(":api").projectDir = file("modules/api")
-
-include("updater")
-project(":updater").projectDir = file("modules/updater")
+}
