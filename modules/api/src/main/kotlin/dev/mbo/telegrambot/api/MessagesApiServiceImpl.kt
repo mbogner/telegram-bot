@@ -17,11 +17,22 @@
 package dev.mbo.telegrambot.api
 
 import dev.mbo.telegrambot.model.ArrayMetaDto
+import dev.mbo.telegrambot.model.MessageDto
 import dev.mbo.telegrambot.model.MessagePageDto
 import org.springframework.stereotype.Service
+import java.time.Instant
+import java.util.UUID
 
 @Service
 class MessagesApiServiceImpl : MessagesApiService {
+
+    override suspend fun getMessageByBid(id: UUID, name: String): MessageDto {
+        return MessageDto(
+            text = "test",
+            id = UUID.randomUUID(),
+            createdAt = Instant.now()
+        )
+    }
 
     override suspend fun getMessages(): MessagePageDto {
         return MessagePageDto(
