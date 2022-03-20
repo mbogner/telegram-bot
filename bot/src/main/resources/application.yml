@@ -20,3 +20,7 @@ spring:
     name: telegram-bot
   main:
     banner-mode: off
+
+clients:
+  telegram:
+    botToken: ${CLIENTS_TELEGRAM_BOT_TOKEN:notoken}

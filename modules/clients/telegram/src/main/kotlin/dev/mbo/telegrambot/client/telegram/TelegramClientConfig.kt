@@ -17,18 +17,26 @@
 package dev.mbo.telegrambot.client.telegram
 
 import dev.mbo.telegrambot.client.FeignConfig
-import dev.mbo.telegrambot.client.telegram.api.TelegramApi
-import org.springframework.context.annotation.Bean
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
+import javax.annotation.PostConstruct
 
 @Configuration
 @Import(FeignConfig::class)
-class TelegramClientConfig {
+class TelegramClientConfig(
+    @Value("\${clients.telegram.botToken:notoken}") private val telegramBotToken: String,
+) {
 
-    @Bean
-    fun telegramApi(): TelegramApi {
-        TODO("not yet implemented")
+    @PostConstruct
+    fun checkBotToken() {
+        if (telegramBotToken.startsWith("notoken") || !telegramBotToken.startsWith("bot")) {
+            throw IllegalStateException("CLIENTS_TELEGRAM_BOT_TOKEN not set properly")
+        }
     }
+
+    // try using feignClient instead
+//    fun telegramApi(): TelegramApi {
+//    }
 
 }

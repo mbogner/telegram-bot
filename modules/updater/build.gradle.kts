@@ -23,5 +23,7 @@ plugins {
 
 dependencies {
     api(project(":common"))
+    api(project(":client-telegram"))
+
     testImplementation(project(":common-test"))
 }
