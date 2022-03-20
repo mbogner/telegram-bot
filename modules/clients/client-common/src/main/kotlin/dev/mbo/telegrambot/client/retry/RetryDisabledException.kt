@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-rootProject.name = "telegram-bot"
+package dev.mbo.telegrambot.client.retry
 
-include("bot")
+import feign.FeignException
 
-include("common")
-project(":common").projectDir = file("modules/common")
-
-include("common-test")
-project(":common-test").projectDir = file("modules/common-test")
-
-include("client-common")
-project(":client-common").projectDir = file("modules/clients/client-common")
-
-include("api")
-project(":api").projectDir = file("modules/api")
-
-include("updater")
-project(":updater").projectDir = file("modules/updater")
+class RetryDisabledException @JvmOverloads constructor(
+    status: Int,
+    message: String,
+    cause: Throwable? = null
+) : FeignException(status, message, cause)

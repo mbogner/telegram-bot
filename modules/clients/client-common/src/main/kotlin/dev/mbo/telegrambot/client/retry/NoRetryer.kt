@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-rootProject.name = "telegram-bot"
+package dev.mbo.telegrambot.client.retry
 
-include("bot")
+import feign.RetryableException
+import feign.Retryer
+import org.apache.http.HttpStatus
 
-include("common")
-project(":common").projectDir = file("modules/common")
+@Suppress("unused")
+class NoRetryer : Retryer {
 
-include("common-test")
-project(":common-test").projectDir = file("modules/common-test")
+    // we only need one instance for throwing exceptions
+    private val instance: NoRetryer
+        get() = this
 
-include("client-common")
-project(":client-common").projectDir = file("modules/clients/client-common")
+    override fun clone(): Retryer {
+        return instance
+    }
 
-include("api")
-project(":api").projectDir = file("modules/api")
-
-include("updater")
-project(":updater").projectDir = file("modules/updater")
+    override fun continueOrPropagate(exc: RetryableException) {
+        throw RetryDisabledException(HttpStatus.SC_INTERNAL_SERVER_ERROR, "retry disabled", exc.cause)
+    }
+}

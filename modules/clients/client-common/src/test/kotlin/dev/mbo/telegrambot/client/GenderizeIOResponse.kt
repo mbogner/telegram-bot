@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-rootProject.name = "telegram-bot"
+package dev.mbo.telegrambot.client
 
-include("bot")
+import com.fasterxml.jackson.annotation.JsonProperty
 
-include("common")
-project(":common").projectDir = file("modules/common")
-
-include("common-test")
-project(":common-test").projectDir = file("modules/common-test")
-
-include("client-common")
-project(":client-common").projectDir = file("modules/clients/client-common")
-
-include("api")
-project(":api").projectDir = file("modules/api")
-
-include("updater")
-project(":updater").projectDir = file("modules/updater")
+data class GenderizeIOResponse(
+    @field:JsonProperty("name") val name: String? = null,
+    @field:JsonProperty("gender") val gender: GenderizeIOGender? = null,
+    @field:JsonProperty("probability") val probability: Double? = null,
+    @field:JsonProperty("count") val count: Int? = null,
+)

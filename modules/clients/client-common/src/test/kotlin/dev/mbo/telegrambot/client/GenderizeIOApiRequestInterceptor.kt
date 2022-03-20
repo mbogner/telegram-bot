@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-rootProject.name = "telegram-bot"
+package dev.mbo.telegrambot.client
 
-include("bot")
+import feign.RequestInterceptor
+import feign.RequestTemplate
+import org.slf4j.LoggerFactory
 
-include("common")
-project(":common").projectDir = file("modules/common")
+@Suppress("unused")
+class GenderizeIOApiRequestInterceptor : RequestInterceptor {
 
-include("common-test")
-project(":common-test").projectDir = file("modules/common-test")
+    private val log = LoggerFactory.getLogger(javaClass)
 
-include("client-common")
-project(":client-common").projectDir = file("modules/clients/client-common")
+    override fun apply(template: RequestTemplate) {
+        log.info("====== intercepting")
+        template.header("X-Ignore", "true")
+    }
 
-include("api")
-project(":api").projectDir = file("modules/api")
-
-include("updater")
-project(":updater").projectDir = file("modules/updater")
+}

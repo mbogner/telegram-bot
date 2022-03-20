@@ -74,6 +74,9 @@ allprojects {
             dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
             // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-reactor
             dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.6.0")
+
+            // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
+            dependency("com.google.code.findbugs:jsr305:3.0.2")
         }
     }
 

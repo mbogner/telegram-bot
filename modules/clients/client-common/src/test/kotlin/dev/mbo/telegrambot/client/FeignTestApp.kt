@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-rootProject.name = "telegram-bot"
+package dev.mbo.telegrambot.client
 
-include("bot")
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.context.annotation.Import
 
-include("common")
-project(":common").projectDir = file("modules/common")
+@SpringBootApplication
+@Import(FeignConfig::class)
+class FeignTestApp {
 
-include("common-test")
-project(":common-test").projectDir = file("modules/common-test")
 
-include("client-common")
-project(":client-common").projectDir = file("modules/clients/client-common")
-
-include("api")
-project(":api").projectDir = file("modules/api")
-
-include("updater")
-project(":updater").projectDir = file("modules/updater")
+}

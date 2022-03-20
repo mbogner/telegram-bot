@@ -1,0 +1,43 @@
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
+        decode404: false
+        retryer: dev.mbo.telegrambot.client.retry.NoRetryer
+      genderizeIOApi:
+        url: https://api.genderize.io
+        basePath: ""
+        requestInterceptors:
+          - dev.mbo.telegrambot.client.GenderizeIOApiRequestInterceptor
+  compression:
+    request:
+      enabled: true
+      mime-types: application/json,text/xml,application/xml,text/html
+      min-request-size: 2048
+logging:
+  level:
+    root: INFO
+    # feign only logs to DEBUG
+    dev.mbo.telegrambot.client.GenderizeIOApi: DEBUG
+spring:
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+      ORDER_MAP_ENTRIES_BY_KEYS: true
+      WRITE_DATES_AS_TIMESTAMPS: false
+      WRITE_EMPTY_JSON_ARRAYS: true
+      WRITE_ENUMS_USING_TO_STRING: true
+      WRITE_NULL_MAP_VALUES: true
+      WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED: false
+      FAIL_ON_SELF_REFERENCES: true
+    deserialization:
+      READ_ENUMS_USING_TO_STRING: true
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+      FAIL_ON_INVALID_SUBTYPE: false
+    mapper:
+      accept-case-insensitive-enums: true
+    default-property-inclusion: non_null
+    time-zone: UTC

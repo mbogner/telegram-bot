@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-rootProject.name = "telegram-bot"
+package dev.mbo.telegrambot.client
 
-include("bot")
+import org.springframework.cloud.openfeign.FeignClient
+import org.springframework.validation.annotation.Validated
 
-include("common")
-project(":common").projectDir = file("modules/common")
-
-include("common-test")
-project(":common-test").projectDir = file("modules/common-test")
-
-include("client-common")
-project(":client-common").projectDir = file("modules/clients/client-common")
-
-include("api")
-project(":api").projectDir = file("modules/api")
-
-include("updater")
-project(":updater").projectDir = file("modules/updater")
+@FeignClient(
+    name = "genderizeIOApi",
+    url = "\${feign.client.config.genderizeIOApi.url:localhost}",
+    path = "\${feign.client.config.genderizeIOApi.basePath:}"
+)
+@Validated
+interface GenderizeIOApiFeignClient : GenderizeIOApi

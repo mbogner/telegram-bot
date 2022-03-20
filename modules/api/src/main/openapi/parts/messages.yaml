@@ -5,7 +5,7 @@ info:
 paths:
   /api/v1/messages:
     get:
-      summary: Get all messates
+      summary: Get all messages
       operationId: getMessages
       tags:
         - Messages
@@ -19,6 +19,35 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MessagePage"
+        default:
+          description: error schema
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /api/v1/messages/{id}:
+    get:
+      summary: Get message by id
+      operationId: getMessageByBid
+      tags:
+        - Messages
+      security:
+        - BearerAuth:
+            - getMessageByBid
+      parameters:
+        - $ref: "#/components/parameters/idPathRequired"
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
         default:
           description: error schema
           content:
