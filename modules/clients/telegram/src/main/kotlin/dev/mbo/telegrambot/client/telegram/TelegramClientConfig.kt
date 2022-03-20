@@ -31,7 +31,7 @@ class TelegramClientConfig(
     @PostConstruct
     fun checkBotToken() {
         if (telegramBotToken.startsWith("notoken") || !telegramBotToken.startsWith("bot")) {
-            throw IllegalStateException("CLIENTS_TELEGRAM_BOT_TOKEN not set properly")
+            throw IllegalStateException("CLIENTS_TELEGRAM_BOT_TOKEN not set properly: $telegramBotToken")
         }
     }
 

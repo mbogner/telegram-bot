@@ -64,7 +64,7 @@ components:
       name: token
       in: path
       description: api token
-      example: bot2223388838:AAsss3DU6Z73jjowo-2pSN22Kw9999KRFB0
+      example: bot123
       required: true
       schema:
         type: string
