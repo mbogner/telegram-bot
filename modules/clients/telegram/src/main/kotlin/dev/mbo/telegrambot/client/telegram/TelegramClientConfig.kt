@@ -17,7 +17,9 @@
 package dev.mbo.telegrambot.client.telegram
 
 import dev.mbo.telegrambot.client.FeignConfig
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import javax.annotation.PostConstruct
@@ -25,8 +27,12 @@ import javax.annotation.PostConstruct
 @Configuration
 @Import(FeignConfig::class)
 class TelegramClientConfig(
-    @Value("\${clients.telegram.botToken:notoken}") private val telegramBotToken: String,
+    @Value("\${clients.telegram.botToken:notoken}") private val telegramBotToken: String
 ) {
+
+    companion object {
+        const val BOT_TOKEN_BEAN = "telegramBotToken"
+    }
 
     @PostConstruct
     fun checkBotToken() {
@@ -35,8 +41,10 @@ class TelegramClientConfig(
         }
     }
 
-    // try using feignClient instead
-//    fun telegramApi(): TelegramApi {
-//    }
+    @Bean
+    @Qualifier(BOT_TOKEN_BEAN)
+    fun telegramBotToken(): String {
+        return telegramBotToken
+    }
 
 }

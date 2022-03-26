@@ -1,5 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="messages | GET /messages" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" nameIsGenerated="true" path="$PROJECT_DIR$/bot/src/test/http/messages.http" requestIdentifier="GET /messages" runType="Run single request">
-    <method v="2" />
-  </configuration>
-</component>

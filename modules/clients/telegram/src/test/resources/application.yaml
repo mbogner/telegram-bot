@@ -1,0 +1,3 @@
+clients:
+  telegram:
+    botToken: bot123
