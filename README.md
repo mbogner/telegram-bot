@@ -9,4 +9,4 @@ This project consists of multiple gradle modules as followed:
     - `api`: A simple API to interact with the running bot.
     - `updater`: An async worker to get updates via polling.
 
-The OpenAPI template is taken from https://github.com/mbogner/kotlin-spring-feign-client-generator.
+The OpenAPI template for feign clients is taken from https://github.com/mbogner/kotlin-spring-feign-client-generator.
