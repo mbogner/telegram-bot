@@ -1,31 +1,28 @@
 openapi: 3.0.3
 info:
-  title: telegram bot api
-  description: api to work with the bot
-  license:
-    name: Apache License v2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0
+  title: Telegram API
+  description: Official telegram API.
   version: v1
 servers:
   - url: https://api.telegram.org
-    description: dev
+    description: prod
 paths:
   # https://core.telegram.org/bots/api
   /{token}/getMe:
     get:
       tags:
         - Telegram
-      summary: Get information about the bot
+      summary: A simple method for testing your bot's authentication token. Requires no parameters. Returns basic information about the bot in form of a User object.
       operationId: getMe
       parameters:
-        - $ref: '#/components/schemas/TokenPathRequired'
+        - $ref: '#/components/parameters/TokenPathRequired'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetMeResponseWrapper'
+                $ref: '#/components/schemas/GetMeResponse'
         default:
           description: error schema
           content:
@@ -34,7 +31,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    GetMeResponseWrapper:
+    GetMeResponse:
       properties:
         ok:
           type: boolean
@@ -61,10 +58,9 @@ components:
       type: string
   parameters:
     TokenPathRequired:
-      name: token
       in: path
-      description: api token
-      example: bot123
+      name: token
+      description: Auth token in the path.
       required: true
       schema:
         type: string

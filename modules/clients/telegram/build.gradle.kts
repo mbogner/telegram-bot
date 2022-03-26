@@ -34,10 +34,11 @@ val openAPISpecFileNamePrefix: String by project
 val openAPISpecFileName = "${openAPISpecFileNamePrefix}${project.name}"
 val openAPISpecFileExt: String by project
 
+val openApiSrcDir = "${project.buildDir}/$openAPIGenOutBase/src/main/kotlin"
 sourceSets {
     main {
         java {
-            srcDirs("src/main/kotlin", "${project.buildDir}/$openAPIGenOutBase/src/main/java")
+            srcDirs("src/main/kotlin", openApiSrcDir)
         }
         resources {
             srcDirs("src/main/resources")
@@ -46,9 +47,9 @@ sourceSets {
 }
 
 openApiGenerate {
-    // https://openapi-generator.tech/docs/generators/java/
-    generatorName.set("java")
-    library.set("feign")
+    // https://openapi-generator.tech/docs/generators/kotlin-spring
+    generatorName.set("kotlin-spring")
+    library.set("spring-boot")
     templateDir.set("$projectDir/$openAPISpecFilePath/templates")
 
     inputSpec.set("$projectDir/$openAPISpecFilePath/$openAPISpecFileName.$openAPISpecFileExt")
@@ -62,27 +63,34 @@ openApiGenerate {
     modelNameSuffix.set("Dto")
     typeMappings.set(
         mapOf(
-            "OffsetDateTime" to "Instant"
+            "DateTime" to "Instant"
         )
     )
     importMappings.set(
         mapOf(
-            "java.time.OffsetDateTime" to "java.time.Instant"
+            "Instant" to "java.time.Instant"
         )
     )
     configOptions.set(
         mapOf(
-            "dateLibrary" to "java8",
             "useBeanValidation" to "true",
-            "performBeanValidation" to "true",
             "delegatePattern" to "true",
-            "hideGenerationTimestamp" to "true",
             "useTags" to "true",
-            "configPackage" to "${openAPIBasePackage}.config",
+            "exceptionHandler" to "false",
+            "gradleBuildFile" to "false",
+            "sortModelPropertiesByRequiredFlag" to "true",
+            "sortParamsByRequiredFlag" to "true",
         )
     )
 }
 
+val openApiClean = tasks.create<Delete>("openApiClean") {
+    group = "openapi tools"
+    delete("$openApiSrcDir/${openAPIBasePackage.replace(".", "/")}")
+}
+
 val openApiGenerateTask = tasks.getByName("openApiGenerate")
 val compileJavaTask = tasks.getByName("compileJava")
+
+openApiGenerateTask.dependsOn(openApiClean)
 compileJavaTask.dependsOn(openApiGenerateTask)
