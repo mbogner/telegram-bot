@@ -90,7 +90,7 @@ val openApiClean = tasks.create<Delete>("openApiClean") {
 }
 
 val openApiGenerateTask = tasks.getByName("openApiGenerate")
-val compileJavaTask = tasks.getByName("compileJava")
+val compileKotlinTask = tasks.getByName("compileKotlin")
 
 openApiGenerateTask.dependsOn(openApiClean)
-compileJavaTask.dependsOn(openApiGenerateTask)
+compileKotlinTask.dependsOn(openApiGenerateTask)

@@ -52,10 +52,11 @@ val openAPISpecFileName = "${openAPISpecFileNamePrefix}${project.name}"
 val openAPISpecFileExt: String by project
 val openAPISpecFile = "$projectDir/$openAPISpecFilePath/$openAPISpecFileName.$openAPISpecFileExt"
 
+val openApiSrcDir = "${project.buildDir}/$openAPIGenOutBase/src/main/kotlin"
 sourceSets {
     main {
         java {
-            srcDirs("src/main/kotlin", "${project.buildDir}/$openAPIGenOutBase/src/main/kotlin")
+            srcDirs("src/main/kotlin", openApiSrcDir)
         }
         resources {
             srcDirs("src/main/resources")
@@ -138,7 +139,13 @@ openApiGenerate {
     )
 }
 
+val openApiClean = tasks.create<Delete>("openApiClean") {
+    group = "openapi tools"
+    delete("$openApiSrcDir/${openAPIBasePackage.replace(".", "/")}")
+}
+
 val openApiGenerateTask = tasks.getByName("openApiGenerate")
+openApiGenerateTask.dependsOn(openApiClean)
 openApiGenerateTask.dependsOn(mergeOpenApiFilesTask)
 
 // get rid of deprecation warning that kaptGenerateStubsKotlin
