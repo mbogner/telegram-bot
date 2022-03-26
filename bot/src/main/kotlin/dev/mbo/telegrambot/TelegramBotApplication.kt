@@ -16,9 +16,13 @@
 
 package dev.mbo.telegrambot
 
+import dev.mbo.telegrambot.client.telegram.EnableTelegramClient
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.scheduling.annotation.EnableAsync
 
+@EnableTelegramClient
+@EnableAsync
 @SpringBootApplication
 class TelegramBotApplication
 

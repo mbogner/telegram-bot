@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package dev.mbo.telegrambot.updater
+package dev.mbo.telegrambot.client.telegram
 
-import org.springframework.context.annotation.Configuration
-import org.springframework.scheduling.annotation.EnableAsync
+import org.springframework.context.annotation.Import
 
-@EnableAsync
-@Configuration
-class TelegramUpdaterConfig
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.CLASS)
+@Import(TelegramClientConfig::class)
+annotation class EnableTelegramClient()

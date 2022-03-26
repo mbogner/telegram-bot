@@ -16,14 +16,20 @@
 
 package dev.mbo.telegrambot.updater
 
+import dev.mbo.telegrambot.client.telegram.TelegramClientConfig
+import dev.mbo.telegrambot.client.telegram.api.TelegramApi
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.event.ContextClosedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 
 @Component
-class TelegramUpdaterWorker {
+class TelegramUpdaterWorker(
+    private val telegramApi: TelegramApi,
+    @Qualifier(TelegramClientConfig.BOT_TOKEN_BEAN) private val telegramBotToken: String,
+) {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -39,6 +45,8 @@ class TelegramUpdaterWorker {
 
     @Async
     fun run() {
+        val me = telegramApi.getMe(telegramBotToken)
+        log.debug("me: {}", me)
         while (running) {
             log.debug("getting updates")
             try {
