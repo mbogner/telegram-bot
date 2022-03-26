@@ -8,12 +8,14 @@ feign:
       default:
         connectTimeout: 5000
         readTimeout: 5000
-        loggerLevel: full
+        loggerLevel: BASIC
         decode404: false
         retryer: dev.mbo.telegrambot.client.retry.NoRetryer
       telegramApi:
         url: https://api.telegram.org
         basePath: ""
+        readTimeout: 60000
+        requestTimeoutSec: 30
   compression:
     request:
       enabled: true

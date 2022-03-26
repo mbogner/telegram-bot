@@ -16,25 +16,60 @@
 
 package dev.mbo.telegrambot.updater
 
+import dev.mbo.telegrambot.client.retry.RetryDisabledException
 import dev.mbo.telegrambot.client.telegram.TelegramClientConfig
 import dev.mbo.telegrambot.client.telegram.api.TelegramApi
+import dev.mbo.telegrambot.client.telegram.model.GetUpdateResponseDto
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.event.ContextClosedEvent
 import org.springframework.context.event.EventListener
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
+import java.net.SocketTimeoutException
 
 @Component
 class TelegramUpdaterWorker(
     private val telegramApi: TelegramApi,
     @Qualifier(TelegramClientConfig.BOT_TOKEN_BEAN) private val telegramBotToken: String,
+    private val updatesWorker: GetUpdateResponseDtoWorker,
+    @Value("\${feign.client.config.telegramApi.requestTimeoutSec}")
+    private val requestTimeoutSec: Int
 ) {
 
     private val log = LoggerFactory.getLogger(javaClass)
+    private val minExpectedDuration = requestTimeoutSec * 1000 - 100
 
     companion object {
         private var running = true
+
+        fun isResponseValid(updates: ResponseEntity<GetUpdateResponseDto>): Boolean =
+            null != updates.body && null != updates.body!!.result && updates.body!!.result!!.isNotEmpty()
+
+        fun readHigherOffsetFromBody(offset: Int, updates: GetUpdateResponseDto): Int {
+            if (null != updates.result) {
+                for (update in updates.result!!) {
+                    if (null != update.updateId && offset < update.updateId!!) {
+                        return update.updateId!!
+                    }
+                }
+            }
+            return offset
+        }
+
+        fun isExpectedTimeout(
+            start: Long,
+            exc: RetryDisabledException,
+            minExpectedDuration: Int
+        ): Boolean {
+            val duration = System.currentTimeMillis() - start
+            return null != exc.cause &&
+                    exc.cause is SocketTimeoutException &&
+                    duration > minExpectedDuration
+        }
     }
 
     @EventListener(ContextClosedEvent::class)
@@ -45,16 +80,31 @@ class TelegramUpdaterWorker(
 
     @Async
     fun run() {
-        val me = telegramApi.getMe(telegramBotToken)
-        log.debug("me: {}", me)
+        var rqStartTimeMs = 0L
+        var offset = 0
         while (running) {
-            log.debug("getting updates")
+            log.trace("getting updates")
             try {
-                Thread.sleep(1000)
-            } catch (exc: InterruptedException) {
-                if (running) {
-                    log.warn("sleep interrupted", exc)
+                rqStartTimeMs = System.currentTimeMillis()
+                val updates = telegramApi.getUpdates(
+                    token = telegramBotToken,
+                    offset = offset + 1,
+                    limit = 100,
+                    timeout = requestTimeoutSec,
+                    allowedUpdates = null
+                )
+                if (updates.statusCode == HttpStatus.OK) {
+                    log.trace("received updates: {}", updates.body)
+                    if (isResponseValid(updates)) {
+                        offset = readHigherOffsetFromBody(offset, updates.body!!)
+                        updatesWorker.process(updates.body!!)
+                    }
+                } else {
+                    log.warn("bad update response: {}", updates)
                 }
+            } catch (exc: RetryDisabledException) {
+                if (isExpectedTimeout(rqStartTimeMs, exc, minExpectedDuration)) continue
+                log.error("error: {}", exc.message)
             }
         }
     }

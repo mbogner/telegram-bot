@@ -5,3 +5,9 @@ application:
 clients:
   telegram:
     botToken: bot123
+
+feign:
+  client:
+    config:
+      telegramApi:
+        requestTimeoutSec: 30
