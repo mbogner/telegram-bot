@@ -14,24 +14,11 @@
  * limitations under the License.
  */
 
-package dev.mbo.telegrambot.updater
+package dev.mbo.telegrambot.client.mite
 
-import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.CommandLineRunner
-import org.springframework.stereotype.Component
+import org.springframework.context.annotation.Import
 
-@Component
-class TelegramUpdater(
-    private val worker: TelegramUpdaterClient,
-    @Value("\${application.updater.enabled:true}") private val enabled: Boolean,
-) : CommandLineRunner {
-
-    private val log = LoggerFactory.getLogger(javaClass)
-
-    override fun run(vararg args: String?) {
-        log.info("starting update worker")
-        if (enabled) worker.run()
-    }
-
-}
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.CLASS)
+@Import(MiteClientConfig::class)
+annotation class EnableMiteClient()

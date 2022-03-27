@@ -28,7 +28,7 @@ dependencies {
 }
 
 val openAPIClientPackage: String by project
-val openAPIBasePackage = "${openAPIClientPackage}.telegram"
+val openAPIBasePackage = "${openAPIClientPackage}.mite"
 val openAPISpecFilePath: String by project
 val openAPIGenOutBase: String by project
 val openAPISpecFileNamePrefix: String by project

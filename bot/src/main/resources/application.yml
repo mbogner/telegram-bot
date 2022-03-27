@@ -16,6 +16,12 @@ feign:
         basePath: ""
         readTimeout: 60000
         requestTimeoutSec: 30
+      mite:
+        url: https://schmidp.mite.yo.lk
+      miteTimeEntryApi:
+        url: ${feign.client.config.mite.url}
+      miteUserApi:
+        url: ${feign.client.config.mite.url}
   compression:
     request:
       enabled: true
@@ -29,7 +35,7 @@ logging:
     dev:
       mbo:
         telegrambot:
-          updater: DEBUG
+          updater: TRACE
 
 server:
   port: 6170
@@ -42,5 +48,7 @@ spring:
     banner-mode: off
 
 clients:
+  mite:
+    apiKey: notoken
   telegram:
     botToken: notoken

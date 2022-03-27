@@ -26,7 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest(classes = [TelegramClientConfig::class])
 internal class TelegramClientTest @Autowired constructor(
     private val telegramApi: TelegramApi,
-    @Qualifier(TelegramClientConfig.BOT_TOKEN_BEAN) private val telegramBotToken: String,
+    @Qualifier(TelegramClientConfig.Q_TELEGRAM_API_TOKEN) private val telegramBotToken: String,
 ) {
 
     @Test

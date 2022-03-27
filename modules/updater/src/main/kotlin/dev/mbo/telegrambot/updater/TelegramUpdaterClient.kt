@@ -23,19 +23,18 @@ import dev.mbo.telegrambot.client.telegram.model.GetUpdateResponseDto
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.event.ContextClosedEvent
-import org.springframework.context.event.EventListener
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
+import java.net.SocketException
 import java.net.SocketTimeoutException
 
 @Component
-class TelegramUpdaterWorker(
+class TelegramUpdaterClient(
     private val telegramApi: TelegramApi,
-    @Qualifier(TelegramClientConfig.BOT_TOKEN_BEAN) private val telegramBotToken: String,
-    private val updatesWorker: GetUpdateResponseDtoWorker,
+    @Qualifier(TelegramClientConfig.Q_TELEGRAM_API_TOKEN) private val telegramBotToken: String,
+    private val queues: TelegramUpdaterQueueAppender,
     @Value("\${feign.client.config.telegramApi.requestTimeoutSec}")
     private val requestTimeoutSec: Int
 ) {
@@ -70,12 +69,10 @@ class TelegramUpdaterWorker(
                     exc.cause is SocketTimeoutException &&
                     duration > minExpectedDuration
         }
-    }
 
-    @EventListener(ContextClosedEvent::class)
-    fun shutdown() {
-        log.info("stopping worker")
-        running = false
+        fun isSocketClosedException(exc: RetryDisabledException): Boolean =
+            null != exc.cause && exc.cause is SocketException &&
+                    exc.cause!!.message.equals("Socket Closed", ignoreCase = true)
     }
 
     @Async
@@ -97,14 +94,15 @@ class TelegramUpdaterWorker(
                     log.trace("received updates: {}", updates.body)
                     if (isResponseValid(updates)) {
                         offset = readHigherOffsetFromBody(offset, updates.body!!)
-                        updatesWorker.process(updates.body!!)
+                        queues.appendResponse(updates.body!!)
                     }
                 } else {
                     log.warn("bad update response: {}", updates)
                 }
             } catch (exc: RetryDisabledException) {
                 if (isExpectedTimeout(rqStartTimeMs, exc, minExpectedDuration)) continue
-                log.error("error: {}", exc.message)
+                if (isSocketClosedException(exc)) continue
+                log.error("error: {}", exc.message, exc)
             }
         }
     }

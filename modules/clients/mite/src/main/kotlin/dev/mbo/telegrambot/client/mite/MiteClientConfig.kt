@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.mbo.telegrambot.client.telegram
+package dev.mbo.telegrambot.client.mite
 
 import dev.mbo.telegrambot.client.FeignConfig
 import org.springframework.beans.factory.annotation.Qualifier
@@ -26,28 +26,25 @@ import javax.annotation.PostConstruct
 
 @Configuration
 @Import(FeignConfig::class)
-class TelegramClientConfig(
-    @Value("\${clients.telegram.botToken:notoken}") private val telegramBotToken: String
+class MiteClientConfig(
+    @Value("\${clients.mite.apiKey:notoken}") private val miteApiKey: String
 ) {
 
     companion object {
-        const val Q_TELEGRAM_API_TOKEN = "telegramApiToken"
+        const val Q_MITE_API_KEY = "miteApiKey"
     }
 
     @PostConstruct
     fun checkBotToken() {
-        if (telegramBotToken.isBlank() ||
-            telegramBotToken.startsWith("notoken") ||
-            !telegramBotToken.startsWith("bot")
-        ) {
-            throw IllegalStateException("CLIENTS_TELEGRAM_BOT_TOKEN not set properly: $telegramBotToken")
+        if (miteApiKey.isBlank() || miteApiKey.startsWith("notoken")) {
+            throw IllegalStateException("CLIENTS_MITE_API_KEY not set properly: $miteApiKey")
         }
     }
 
     @Bean
-    @Qualifier(Q_TELEGRAM_API_TOKEN)
-    fun telegramApiToken(): String {
-        return telegramBotToken
+    @Qualifier(Q_MITE_API_KEY)
+    fun miteApiKey(): String {
+        return miteApiKey
     }
 
 }

@@ -3,6 +3,8 @@ application:
     enabled: false
 
 clients:
+  mite:
+    apiKey: api123
   telegram:
     botToken: bot123
 

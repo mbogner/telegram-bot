@@ -1,0 +1,104 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Mite API
+servers:
+  - url: https://schmidp.mite.yo.lk/
+paths:
+  /users.json:
+    get:
+      summary: Returns a list of active users.
+      operationId: getAllActiveUsers
+      tags:
+        - MiteUser
+      parameters:
+        - $ref: "#/components/parameters/ApiKeyHeader"
+      responses:
+        "200":
+          description: Executed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserList"
+  /time_entries.json:
+    get:
+      summary: List all time entries of all users
+      operationId: getAllTimeEntries
+      tags:
+        - MiteTimeEntry
+      parameters:
+        - $ref: "#/components/parameters/ApiKeyHeader"
+        - in: query
+          name: user_id
+          schema:
+            type: integer
+        - in: query
+          name: project_id
+          schema:
+            type: integer
+        - in: query
+          name: group_by
+          schema:
+            type: string
+            description: defaults to "date"
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Executed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeEntryList"
+        "401":
+          description: Missing or wrong api_key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Error:
+      properties:
+        error:
+          type: string
+    UserList:
+      type: array
+      items:
+        $ref: "#/components/schemas/MiteUser"
+    MiteUser:
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+    User:
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+    TimeEntryList:
+      type: array
+      items:
+        $ref: "#/components/schemas/TimeEntry"
+    TimeEntry:
+      properties:
+        time_entry_group:
+          $ref: "#/components/schemas/TimeEntryGroup"
+    TimeEntryGroup:
+      properties:
+        minutes:
+          type: integer
+        week:
+          type: string
+  parameters:
+    ApiKeyHeader:
+      in: header
+      name: X-MiteApiKey
+      description: Authentication header.
+      required: true
+      schema:
+        type: string

@@ -23,7 +23,7 @@ plugins {
     kotlin("kapt") version "1.6.10" apply (false)
 
     // https://plugins.gradle.org/plugin/org.springframework.boot
-    id("org.springframework.boot") version "2.6.4" apply (false)
+    id("org.springframework.boot") version "2.6.5" apply (false)
     // https://plugins.gradle.org/plugin/io.spring.dependency-management
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
 
@@ -61,9 +61,9 @@ allprojects {
         }
         dependencies {
             // https://mvnrepository.com/artifact/org.mapstruct/mapstruct
-            dependency("org.mapstruct:mapstruct:1.5.0.Beta2")
+            dependency("org.mapstruct:mapstruct:1.5.0.RC1")
             // https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor
-            dependency("org.mapstruct:mapstruct-processor:1.5.0.Beta2")
+            dependency("org.mapstruct:mapstruct-processor:1.5.0.RC1")
 
             // https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
             dependency("io.swagger.core.v3:swagger-annotations:2.1.13")

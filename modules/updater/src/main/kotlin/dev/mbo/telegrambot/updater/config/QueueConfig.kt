@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package dev.mbo.telegrambot.updater
+package dev.mbo.telegrambot.updater.config
 
-import dev.mbo.telegrambot.client.telegram.model.GetUpdateResponseDto
-import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Async
-import org.springframework.stereotype.Component
+import dev.mbo.telegrambot.client.telegram.model.UpdateDto
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import java.util.concurrent.LinkedBlockingQueue
 
-@Component
-class GetUpdateResponseDtoWorker {
+@Configuration
+class QueueConfig {
 
-    private val log = LoggerFactory.getLogger(javaClass)
-
-    @Async
-    fun process(updates: GetUpdateResponseDto) {
-        log.warn("doing nothing with the received message")
+    @Bean
+    @Qualifier("messages")
+    fun telegramMessagesQueue(): LinkedBlockingQueue<UpdateDto> {
+        return LinkedBlockingQueue<UpdateDto>()
     }
 
 }
