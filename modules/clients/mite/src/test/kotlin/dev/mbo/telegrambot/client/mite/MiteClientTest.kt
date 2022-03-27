@@ -14,24 +14,27 @@
  * limitations under the License.
  */
 
-package dev.mbo.telegrambot.client.telegram
+package dev.mbo.telegrambot.client.mite
 
-import dev.mbo.telegrambot.client.telegram.api.TelegramApi
+import dev.mbo.telegrambot.client.mite.api.MiteTimeEntryApi
+import dev.mbo.telegrambot.client.mite.api.MiteUserApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest(classes = [TelegramClientApp::class])
-internal class TelegramClientTest @Autowired constructor(
-    private val telegramApi: TelegramApi,
-    @Qualifier(TelegramClientConfig.Q_TELEGRAM_API_TOKEN) private val secret: String,
+@SpringBootTest(classes = [MiteClientApp::class])
+internal class MiteClientTest @Autowired constructor(
+    private val userApi: MiteUserApi,
+    private val timeEntryApi: MiteTimeEntryApi,
+    @Qualifier(MiteClientConfig.Q_MITE_API_KEY) private val secret: String,
 ) {
 
     @Test
     fun testContext() {
-        assertThat(telegramApi).isNotNull
+        assertThat(userApi).isNotNull
+        assertThat(timeEntryApi).isNotNull
         assertThat(secret).isNotNull
     }
 
