@@ -24,18 +24,16 @@ plugins {
 
 dependencies {
     api(project(":client-common"))
+    api("com.squareup.okhttp3:okhttp")
     testImplementation(project(":common-test"))
 }
 
-val openAPIClientPackage: String by project
-val openAPIBasePackage = "${openAPIClientPackage}.telegram"
-val openAPISpecFilePath: String by project
-val openAPIGenOutBase: String by project
-val openAPISpecFileNamePrefix: String by project
-val openAPISpecFileName = "${openAPISpecFileNamePrefix}${project.name}"
-val openAPISpecFileExt: String by project
+// ---------------------------
+val openApiBasePackage = "dev.mbo.telegrambot.client.telegram"
+val openApiGenOutBase = "${layout.buildDirectory.get()}/generated/openapi"
+val openApiSrcDir = "$projectDir/src/gen/kotlin"
+val openApiPath = "$openApiSrcDir/${openApiBasePackage.replace(".", "/")}"
 
-val openApiSrcDir = "${project.buildDir}/$openAPIGenOutBase/src/main/kotlin"
 sourceSets {
     main {
         java {
@@ -48,23 +46,24 @@ sourceSets {
 }
 
 openApiGenerate {
-    // https://openapi-generator.tech/docs/generators/kotlin-spring
-    generatorName.set("kotlin-spring")
-    library.set("spring-boot")
-    templateDir.set("${project.rootDir}/modules/clients/client-common/$openAPISpecFilePath/templates")
+    // https://openapi-generator.tech/docs/generators/kotlin
+    generatorName.set("kotlin")
+    library.set("jvm-okhttp4")
+    templateDir.set("$rootDir/modules/clients/client-common/src/main/openapi/kotlin")
 
-    inputSpec.set("$projectDir/$openAPISpecFilePath/$openAPISpecFileName.$openAPISpecFileExt")
-    outputDir.set("$buildDir/$openAPIGenOutBase")
+    inputSpec.set("$projectDir/src/main/openapi/spec-client-telegram.yml")
+    outputDir.set(openApiGenOutBase)
 
-    packageName.set(openAPIBasePackage)
-    apiPackage.set("$openAPIBasePackage.api")
-    invokerPackage.set("$openAPIBasePackage.client")
-    modelPackage.set("$openAPIBasePackage.model")
+    packageName.set(openApiBasePackage)
+    apiPackage.set("$openApiBasePackage.api")
+    invokerPackage.set("$openApiBasePackage.client")
+    modelPackage.set("$openApiBasePackage.model")
 
     modelNameSuffix.set("Dto")
     typeMappings.set(
         mapOf(
-            "DateTime" to "Instant"
+            "DateTime" to "Instant",
+            "Timestamp" to "Instant"
         )
     )
     importMappings.set(
@@ -72,26 +71,37 @@ openApiGenerate {
             "Instant" to "java.time.Instant"
         )
     )
+    // https://openapi-generator.tech/docs/generators/kotlin
     configOptions.set(
         mapOf(
-            "useBeanValidation" to "true",
-            "delegatePattern" to "true",
-            "useTags" to "true",
-            "exceptionHandler" to "false",
-            "gradleBuildFile" to "false",
-            "sortModelPropertiesByRequiredFlag" to "true",
-            "sortParamsByRequiredFlag" to "true",
+            "serializationLibrary" to "jackson",
+            "useSpringBoot3" to "true",
         )
     )
 }
 
 val openApiClean = tasks.create<Delete>("openApiClean") {
     group = "openapi tools"
-    delete("$openApiSrcDir/${openAPIBasePackage.replace(".", "/")}")
+    delete(openApiGenOutBase)
+    delete(openApiPath)
 }
 
 val openApiGenerateTask = tasks.getByName("openApiGenerate")
-val compileKotlinTask = tasks.getByName("compileKotlin")
-
 openApiGenerateTask.dependsOn(openApiClean)
-compileKotlinTask.dependsOn(openApiGenerateTask)
+
+// copy generated files to src/gen folder
+val copyGeneratedApiTask = tasks.register<Copy>("copyGeneratedApiTask") {
+    from("$openApiGenOutBase/src/main/kotlin")
+    into(openApiSrcDir)
+    dependsOn(openApiGenerateTask)
+}
+
+// and get rid of stuff that isn't needed
+val removeUnnecessaryApiFileTask = tasks.register<Delete>("removeUnnecessaryApiFileTask") {
+    delete("$openApiPath/client")
+    dependsOn(copyGeneratedApiTask)
+}
+
+// make compile dependent on the generation
+val compileKotlinTask = tasks.getByName("compileKotlin")
+compileKotlinTask.dependsOn(removeUnnecessaryApiFileTask)

@@ -18,7 +18,7 @@ package dev.mbo.telegrambot.updater
 
 import dev.mbo.telegrambot.client.telegram.model.GetUpdateResponseDto
 import dev.mbo.telegrambot.client.telegram.model.UpdateDto
-import org.slf4j.LoggerFactory
+import dev.mbo.telegrambot.logging.logger
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
@@ -30,7 +30,7 @@ class TelegramUpdaterQueueAppender(
     @Qualifier("messages") private val messagesQueue: LinkedBlockingQueue<UpdateDto>
 ) {
 
-    private val log = LoggerFactory.getLogger(javaClass)
+    private val log = logger()
 
     @Async
     fun appendResponse(response: GetUpdateResponseDto) {

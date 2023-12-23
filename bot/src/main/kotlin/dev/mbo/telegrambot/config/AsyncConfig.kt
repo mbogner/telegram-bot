@@ -16,21 +16,21 @@
 
 package dev.mbo.telegrambot.config
 
-import org.slf4j.LoggerFactory
+import dev.mbo.telegrambot.logging.logger
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler
 import org.springframework.beans.factory.BeanCreationNotAllowedException
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.event.ContextClosedEvent
 import org.springframework.context.event.EventListener
-import org.springframework.scheduling.annotation.AsyncConfigurerSupport
+import org.springframework.scheduling.annotation.AsyncConfigurer
 import org.springframework.scheduling.annotation.EnableAsync
 import java.lang.reflect.Method
 
 @EnableAsync
 @Configuration
-class AsyncConfig : AsyncConfigurerSupport() {
+class AsyncConfig : AsyncConfigurer {
 
-    private val log = LoggerFactory.getLogger(javaClass)
+    private val log = logger()
 
     companion object {
         private var closed = false

@@ -16,7 +16,7 @@
 
 package dev.mbo.telegrambot.updater
 
-import org.slf4j.LoggerFactory
+import dev.mbo.telegrambot.logging.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
@@ -27,7 +27,7 @@ class TelegramUpdater(
     @Value("\${application.updater.enabled:true}") private val enabled: Boolean,
 ) : CommandLineRunner {
 
-    private val log = LoggerFactory.getLogger(javaClass)
+    private val log = logger()
 
     override fun run(vararg args: String?) {
         log.info("starting update worker")

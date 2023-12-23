@@ -2,32 +2,6 @@ application:
   updater:
     enabled: true
 
-feign:
-  client:
-    config:
-      default:
-        connectTimeout: 5000
-        readTimeout: 5000
-        loggerLevel: BASIC
-        decode404: false
-        retryer: dev.mbo.telegrambot.client.retry.NoRetryer
-      telegramApi:
-        url: https://api.telegram.org
-        basePath: ""
-        readTimeout: 60000
-        requestTimeoutSec: 30
-      mite:
-        url: https://schmidp.mite.yo.lk
-      miteTimeEntryApi:
-        url: ${feign.client.config.mite.url}
-      miteUserApi:
-        url: ${feign.client.config.mite.url}
-  compression:
-    request:
-      enabled: true
-      mime-types: application/json,text/xml,application/xml,text/html
-      min-request-size: 2048
-
 logging:
   level:
     root: INFO
@@ -46,6 +20,7 @@ spring:
     name: telegram-bot
   main:
     banner-mode: off
+  # jackson config for client is coming from within client package
 
 clients:
   mite:

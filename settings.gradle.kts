@@ -30,8 +30,5 @@ project(":client-common").projectDir = file("modules/clients/client-common")
 include("client-telegram")
 project(":client-telegram").projectDir = file("modules/clients/telegram")
 
-include("api")
-project(":api").projectDir = file("modules/api")
-
 include("updater")
 project(":updater").projectDir = file("modules/updater")

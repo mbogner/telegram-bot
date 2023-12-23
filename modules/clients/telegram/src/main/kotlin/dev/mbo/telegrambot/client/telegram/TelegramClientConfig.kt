@@ -16,17 +16,19 @@
 
 package dev.mbo.telegrambot.client.telegram
 
-import dev.mbo.telegrambot.client.FeignConfig
+import dev.mbo.telegrambot.client.telegram.api.TelegramApi
+import dev.mbo.telegrambot.client.telegram.infrastructure.ApiClient
+import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Import
-import javax.annotation.PostConstruct
 
 @Configuration
-@Import(FeignConfig::class)
+@ComponentScan(basePackageClasses = [TelegramClientConfig::class])
 class TelegramClientConfig(
+    @Value("\${clients.telegram.basePath:https://api.telegram.org}") private val basePath: String,
     @Value("\${clients.telegram.botToken:notoken}") private val telegramBotToken: String
 ) {
 
@@ -48,6 +50,14 @@ class TelegramClientConfig(
     @Qualifier(Q_TELEGRAM_API_TOKEN)
     fun telegramApiToken(): String {
         return telegramBotToken
+    }
+
+    @Bean
+    fun TelegramApi(): TelegramApi {
+        return TelegramApi(
+            basePath = basePath,
+            client = ApiClient.defaultClient,
+        )
     }
 
 }

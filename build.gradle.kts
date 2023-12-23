@@ -18,23 +18,23 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     // https://kotlinlang.org/docs/releases.html
-    kotlin("jvm") version "1.6.10" apply (false)
-    kotlin("plugin.spring") version "1.6.10" apply (false)
-    kotlin("kapt") version "1.6.10" apply (false)
+    kotlin("jvm") version "1.9.22" apply (false)
+    kotlin("plugin.spring") version "1.9.22" apply (false)
+    kotlin("kapt") version "1.9.22" apply (false)
 
     // https://plugins.gradle.org/plugin/org.springframework.boot
-    id("org.springframework.boot") version "2.6.5" apply (false)
+    id("org.springframework.boot") version "3.2.1" apply (false)
     // https://plugins.gradle.org/plugin/io.spring.dependency-management
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("io.spring.dependency-management") version "1.1.4"
 
     // https://plugins.gradle.org/plugin/org.openapi.generator
-    id("org.openapi.generator") version "5.4.0" apply (false)
+    id("org.openapi.generator") version "7.2.0" apply (false)
     // https://plugins.gradle.org/plugin/com.rameshkp.openapi-merger-gradle-plugin
-    id("com.rameshkp.openapi-merger-gradle-plugin") version "1.0.4" apply (false)
+    id("com.rameshkp.openapi-merger-gradle-plugin") version "1.0.5" apply (false)
 }
 
-val javaVersion = JavaVersion.VERSION_17
-val javaVersionStr = "17"
+val javaVersion = JavaVersion.VERSION_21
+val javaVersionStr = "21"
 
 val springCloudVersion: String by project
 
@@ -50,10 +50,6 @@ allprojects {
     apply(plugin = "io.spring.dependency-management")
     the<io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension>().apply {
         imports {
-            // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-parent
-            mavenBom("org.springframework.cloud:spring-cloud-starter-parent:${springCloudVersion}")
-            // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
             mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
         }
         resolutionStrategy {
@@ -61,25 +57,25 @@ allprojects {
         }
         dependencies {
             // https://mvnrepository.com/artifact/org.mapstruct/mapstruct
-            dependency("org.mapstruct:mapstruct:1.5.0.RC1")
+            dependency("org.mapstruct:mapstruct:1.5.5.Final")
             // https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor
-            dependency("org.mapstruct:mapstruct-processor:1.5.0.RC1")
+            dependency("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
             // https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
-            dependency("io.swagger.core.v3:swagger-annotations:2.1.13")
+            dependency("io.swagger.core.v3:swagger-annotations:2.2.19")
             // https://mvnrepository.com/artifact/io.swagger/swagger-annotations
-            dependency("io.swagger:swagger-annotations:1.6.5")
+            dependency("io.swagger:swagger-annotations:1.6.12")
             // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
             dependency("com.google.code.findbugs:jsr305:3.0.2")
             // https://mvnrepository.com/artifact/org.openapitools/jackson-databind-nullable
-            dependency("org.openapitools:jackson-databind-nullable:0.2.2")
+            dependency("org.openapitools:jackson-databind-nullable:0.2.6")
             // https://mvnrepository.com/artifact/com.github.scribejava/scribejava-core
-            dependency("com.github.scribejava:scribejava-core:8.3.1")
+            dependency("com.github.scribejava:scribejava-core:8.3.3")
 
             // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
-            dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+            dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
             // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-reactor
-            dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.6.0")
+            dependency("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
 
         }
     }
@@ -104,4 +100,10 @@ allprojects {
         useJUnitPlatform()
     }
 
+}
+
+tasks.withType<Wrapper> {
+    // https://gradle.org/releases
+    gradleVersion = "8.5"
+    distributionType = Wrapper.DistributionType.BIN
 }

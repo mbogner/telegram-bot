@@ -20,19 +20,16 @@ import dev.mbo.telegrambot.client.telegram.api.TelegramApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest(classes = [TelegramClientApp::class])
 internal class TelegramClientTest @Autowired constructor(
     private val telegramApi: TelegramApi,
-    @Qualifier(TelegramClientConfig.Q_TELEGRAM_API_TOKEN) private val secret: String,
 ) {
 
     @Test
     fun testContext() {
         assertThat(telegramApi).isNotNull
-        assertThat(secret).isNotNull
     }
 
 }
