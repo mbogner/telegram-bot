@@ -16,7 +16,6 @@
 
 package dev.mbo.telegrambot
 
-import dev.mbo.telegrambot.client.mite.EnableMiteClient
 import dev.mbo.telegrambot.client.telegram.EnableTelegramClient
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -24,7 +23,6 @@ import org.springframework.scheduling.annotation.EnableScheduling
 
 @EnableScheduling
 @EnableTelegramClient
-@EnableMiteClient
 @SpringBootApplication
 class TelegramBotApplication
 
