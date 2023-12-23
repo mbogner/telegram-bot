@@ -22,6 +22,7 @@ import dev.mbo.telegrambot.client.telegram.model.GetUpdateResponseDto
 import dev.mbo.telegrambot.logging.logger
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.task.TaskRejectedException
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 
@@ -53,22 +54,26 @@ class TelegramUpdaterClient(
     @Async
     fun run() {
         var offset = 0
-        while (running) {
-            log.trace("getting updates")
-            val updates: GetUpdateResponseDto = telegramApi.getUpdates(
-                token = telegramBotToken,
-                offset = offset + 1,
-                limit = 100,
-                timeout = requestTimeoutSec,
-                allowedUpdates = null
-            )
-            if (true == updates.ok) {
-                log.trace("received updates: {}", updates)
-                offset = readHigherOffsetFromBody(offset, updates)
-                queues.appendResponse(updates)
-            } else {
-                log.warn("bad update response: {}", updates)
+        try {
+            while (running) {
+                log.trace("getting updates")
+                val updates: GetUpdateResponseDto = telegramApi.getUpdates(
+                    token = telegramBotToken,
+                    offset = offset + 1,
+                    limit = 100,
+                    timeout = requestTimeoutSec,
+                    allowedUpdates = null
+                )
+                if (true == updates.ok) {
+                    log.trace("received updates: {}", updates)
+                    offset = readHigherOffsetFromBody(offset, updates)
+                    queues.appendResponse(updates)
+                } else {
+                    log.warn("bad update response: {}", updates)
+                }
             }
+        } catch (exc: TaskRejectedException) {
+            // ignore - we're shutting down
         }
     }
 
